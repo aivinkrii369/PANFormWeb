@@ -1,16 +1,51 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <title>PAN Form Fixer</title>
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
-</body>
+  <h2>PAN Form Submission</h2>
+  <form id="panForm">
+    <label>Full Name:</label><br>
+    <input type="text" name="fullName" required><br><br>
 
+    <label>Email:</label><br>
+    <input type="email" name="email" required><br><br>
+
+    <label>PAN Number:</label><br>
+    <input type="text" name="panNo" required><br><br>
+
+    <label>WhatsApp Number:</label><br>
+    <input type="text" name="whatsappNo" required><br><br>
+
+    <label>Issue Description:</label><br>
+    <textarea name="issueDescription" required></textarea><br><br>
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="response"></p>
+
+  <script>
+    document.getElementById("panForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch("https://script.google.com/macros/s/AKfycbzdc9NCzH1xSV5Cn7mQwPzhtb_M0JaixaD8_d_Rqh4OmEOWcgtI3y1vsYS_PB5zB7JK/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("response").innerText = data.message;
+      })
+      .catch(err => {
+        document.getElementById("response").innerText = "Error: " + err;
+      });
+    });
+  </script>
+</body>
 </html>
+
+
