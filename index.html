@@ -1,49 +1,174 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>PAN Form Fixer</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SarkariFixo – Government Form Correction Assistant</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #F5F7FA;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Header */
+    .header {
+      background: #003B95;
+      padding: 25px 0;
+      color: white;
+      text-align: center;
+      letter-spacing: 5px;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      margin-top: 5px;
+      letter-spacing: 1px;
+      opacity: 0.9;
+    }
+
+    /* Main Title */
+    .main-title {
+      text-align: center;
+      margin: 30px 0;
+      font-size: 24px;
+      color: #333;
+      font-weight: bold;
+    }
+
+    /* Cards Layout */
+    .container {
+      width: 90%;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      padding-bottom: 50px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.08);
+      text-align: center;
+      border-top: 4px solid #003B95;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #003B95;
+    }
+
+    .card-desc {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.4;
+    }
+
+    .btn {
+      background: #003B95;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      font-size: 15px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn:hover {
+      background: #01285F;
+    }
+  </style>
 </head>
+
 <body>
-  <h2>PAN Form Submission</h2>
-  <form id="panForm">
-    <label>Full Name:</label><br>
-    <input type="text" name="fullName" required><br><br>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+  <!-- HEADER -->
+  <div class="header">
+    S A R K A R I F I X O
+    <div class="subtitle">Government Form Correction Assistant</div>
+  </div>
 
-    <label>PAN Number:</label><br>
-    <input type="text" name="panNo" required><br><br>
+  <!-- MAIN TITLE -->
+  <div class="main-title">Choose a Service to Fix Errors or Apply Corrections</div>
 
-    <label>WhatsApp Number:</label><br>
-    <input type="text" name="whatsappNo" required><br><br>
+  <!-- CARDS -->
+  <div class="container">
 
-    <label>Issue Description:</label><br>
-    <textarea name="issueDescription" required></textarea><br><br>
+    <div class="card">
+      <div class="card-title">PAN Card</div>
+      <div class="card-desc">Correction in name, DOB, father name, address, etc.</div>
+      <a href="/form/pan"><button class="btn">Fix PAN</button></a>
+    </div>
 
-    <button type="submit">Submit</button>
-  </form>
+    <div class="card">
+      <div class="card-title">Aadhaar</div>
+      <div class="card-desc">Name, address, mobile update or correction.</div>
+      <a href="/form/aadhaar"><button class="btn">Fix Aadhaar</button></a>
+    </div>
 
-  <p id="response"></p>
+    <div class="card">
+      <div class="card-title">Passport</div>
+      <div class="card-desc">Correction in name, expiry, address, or lost passport.</div>
+      <a href="/form/passport"><button class="btn">Fix Passport</button></a>
+    </div>
 
-  <script>
-    document.getElementById("panForm").addEventListener("submit", function(e) {
-      e.preventDefault();
+    <div class="card">
+      <div class="card-title">Voter ID</div>
+      <div class="card-desc">Name, address, age, or photo correction.</div>
+      <a href="/form/voterid"><button class="btn">Fix Voter ID</button></a>
+    </div>
 
-      const formData = new FormData(this);
+    <div class="card">
+      <div class="card-title">Driving License</div>
+      <div class="card-desc">Name/address corrections, duplicate DL, renewal help.</div>
+      <a href="/form/drivinglicense"><button class="btn">Fix Driving License</button></a>
+    </div>
 
-      fetch("https://script.google.com/macros/s/AKfycbzdc9NCzH1xSV5Cn7mQwPzhtb_M0JaixaD8_d_Rqh4OmEOWcgtI3y1vsYS_PB5zB7JK/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById("response").innerText = data.message;
-      })
-      .catch(err => {
-        document.getElementById("response").innerText = "Error: " + err;
-      });
-    });
-  </script>
+    <div class="card">
+      <div class="card-title">Birth Certificate</div>
+      <div class="card-desc">Name, DOB, parent's name correction.</div>
+      <a href="/form/birthcertificate"><button class="btn">Fix Birth Certificate</button></a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Income Certificate</div>
+      <div class="card-desc">Apply or fix errors in existing income certificate.</div>
+      <a href="/form/incomecertificate"><button class="btn">Fix Income Certificate</button></a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Caste Certificate</div>
+      <div class="card-desc">Correct caste, name, address or request new certificate.</div>
+      <a href="/form/castecertificate"><button class="btn">Fix Caste Certificate</button></a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ration Card</div>
+      <div class="card-desc">Add/remove members, address correction.</div>
+      <a href="/form/rationcard"><button class="btn">Fix Ration Card</button></a>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Ayushman Bharat</div>
+      <div class="card-desc">Correction or new Health ID generation.</div>
+      <a href="/form/ayushman"><button class="btn">Fix Ayushman Bharat</button></a>
+    </div>
+
+  </div>
+
 </body>
 </html>
+
+
+
+

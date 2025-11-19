@@ -1,0 +1,113 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Birth Certificate Fixer — SarkariFixo</title>
+
+  <style>
+    body { font-family: Arial; background:#f4f4f4; margin:0; padding:0; }
+
+    header {
+      background:#003399; color:white; padding:22px 0;
+      text-align:center; margin-bottom:30px;
+    }
+    header h2 { margin:0; font-size:24px; letter-spacing:5px; }
+    header div { font-size:13px; opacity:0.9; margin-top:6px; }
+
+    main {
+      max-width:480px; margin:auto; background:white; padding:25px;
+      border-radius:12px; box-shadow:0 0 12px rgba(0,0,0,0.1);
+    }
+    h1 { text-align:center; color:#003399; margin-top:0; }
+    p { text-align:center; color:#555; margin-top:-5px; }
+
+    label { display:block; margin-top:15px; font-weight:bold; }
+    input, textarea {
+      width:100%; padding:10px; margin-top:6px;
+      border:1px solid #ccc; border-radius:6px;
+    }
+    button {
+      width:100%; padding:12px; background:#003399; border:none;
+      border-radius:6px; color:white; margin-top:20px;
+      font-size:16px; cursor:pointer;
+    }
+    button:hover { background:#002070; }
+
+    #msg { text-align:center; margin-top:20px; font-weight:bold; }
+
+    footer {
+      background:#eee; text-align:center; padding:15px;
+      margin-top:40px; font-size:14px; color:#555;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>S  A  R  K  A  R  I  F  I  X  O</h2>
+  <div>Government Form Correction Assistant</div>
+</header>
+
+<main>
+  <h1>Birth Certificate Fixer</h1>
+  <p>Submit corrections for name, DOB, parents name etc.</p>
+
+  <form id="fixerForm">
+
+    <label>Full Name</label>
+    <input name="fullName" required>
+
+    <label>Email</label>
+    <input name="email" type="email" required>
+
+    <label>Phone</label>
+    <input name="phone">
+
+    <label>Birth Registration Number</label>
+    <input name="birthRegNumber" placeholder="Enter registration number">
+
+    <label>Issue Description</label>
+    <textarea name="issue" rows="4" required></textarea>
+
+    <input type="hidden" name="service" value="birth_certificate">
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="msg"></p>
+</main>
+
+<footer>© 2025 SarkariFixo — All Rights Reserved</footer>
+
+<script>
+const form=document.getElementById("fixerForm");
+const msg=document.getElementById("msg");
+
+form.addEventListener("submit", async (e)=>{
+  e.preventDefault();
+  msg.textContent="Submitting…";
+
+  const data=Object.fromEntries(new FormData(form).entries());
+  const res=await fetch("/submit/birthcertificate",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify(data)
+  });
+
+  const result=await res.json();
+  if(result.ok){
+    msg.style.color="green";
+    msg.textContent="✔ Submission successful. Check email.";
+    form.reset();
+  } else {
+    msg.style.color="red";
+    msg.textContent="❌ " + result.error;
+  }
+});
+</script>
+
+</body>
+</html>
+

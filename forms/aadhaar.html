@@ -1,0 +1,188 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aadhaar Fixer — SarkariFixo</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #003399;
+      color: white;
+      padding: 22px 0;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    header h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: 5px;
+    }
+
+    header div {
+      font-size: 13px;
+      opacity: 0.9;
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    main {
+      max-width: 480px;
+      margin: auto;
+      background: #ffffff;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin-top: 0;
+      text-align: center;
+      color: #003399;
+    }
+
+    p {
+      text-align: center;
+      margin-top: -5px;
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      box-sizing: border-box;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      font-size: 16px;
+      border: none;
+      background: #003399;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #002070;
+    }
+
+    #msg {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    footer {
+      background: #eee;
+      text-align: center;
+      padding: 15px;
+      margin-top: 40px;
+      font-size: 14px;
+      color: #555;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>S  A  R  K  A  R  I  F  I  X  O</h2>
+  <div>Government Form Correction Assistant</div>
+</header>
+
+<main>
+  <h1>Aadhaar Fixer</h1>
+  <p>Submit your Aadhaar correction request below.</p>
+
+  <form id="fixerForm" novalidate>
+
+    <label>Full Name</label>
+    <input name="fullName" type="text" required placeholder="Your full name">
+
+    <label>Email</label>
+    <input name="email" type="email" required placeholder="you@example.com">
+
+    <label>Phone</label>
+    <input name="phone" type="tel" placeholder="Mobile number linked to Aadhaar">
+
+    <label>Aadhaar Number</label>
+    <input name="aadhaarNumber" placeholder="1234 5678 9012">
+
+    <label>Issue Description</label>
+    <textarea name="issue" rows="4" required placeholder="Describe the correction needed"></textarea>
+
+    <input type="hidden" name="service" value="aadhaar">
+
+    <button type="submit">Submit</button>
+  </form>
+
+  <p id="msg"></p>
+</main>
+
+<footer>
+  © 2025 SarkariFixo — All Rights Reserved
+</footer>
+
+<script>
+  const form = document.getElementById("fixerForm");
+  const msg = document.getElementById("msg");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    msg.style.color = "black";
+    msg.textContent = "Submitting… please wait.";
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    const response = await fetch("/submit/aadhaar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+
+    const result = await response.json();
+
+    if (result.ok) {
+      msg.style.color = "green";
+      msg.textContent = "✔ Submission successful. Check your email.";
+      form.reset();
+    } else {
+      msg.style.color = "red";
+      msg.textContent = "❌ " + result.error;
+    }
+  });
+</script>
+
+</body>
+</html>
+
+
+

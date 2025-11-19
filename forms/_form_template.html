@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{SERVICE_NAME}} — SarkariFixo</title>
+  <link rel="stylesheet" href="/public/css/styles.css">
+  <style>
+    /* Minimal inline styles so it looks OK before you add CSS */
+    body{font-family:Arial, sans-serif; padding:20px; background:#f7f7f7}
+    main{max-width:700px; margin:0 auto; background:#fff; padding:18px; border-radius:8px}
+    label{display:block; margin-bottom:10px}
+    input, textarea{width:100%; padding:8px; box-sizing:border-box}
+    button{padding:10px 14px; border:none; border-radius:6px; cursor:pointer}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>{{SERVICE_NAME}} Fixer</h1>
+    <p>Fill fields below — we’ll email you confirmation and next steps.</p>
+
+    <form id="fixerForm" action="/submit/{{SERVICE_KEY}}" method="post" novalidate>
+      <!-- Common fields -->
+      <label>Full name
+        <input name="fullName" type="text" required placeholder="Your full name">
+      </label>
+
+      <label>Email
+        <input name="email" type="email" required placeholder="you@example.com">
+      </label>
+
+      <label>Phone
+        <input name="phone" type="tel" placeholder="Optional — mobile number">
+      </label>
+
+      <!-- Service-specific fields: replace this block in copies -->
+      <div id="service-fields">
+        <!-- example placeholders; replace for each service -->
+        <label>Document Number
+          <input name="{{SERVICE_FIELD_1}}" placeholder="e.g. ABCDE1234F">
+        </label>
+
+        <label>Issue description
+          <textarea name="issue" rows="4" required placeholder="Describe the error / correction required"></textarea>
+        </label>
+      </div>
+
+      <input type="hidden" name="service" value="{{SERVICE_KEY}}">
+      <button type="submit">Submit</button>
+    </form>
+
+    <p id="msg" style="color:green"></p>
+  </main>
+
+  <script>
+    // Minimal client-side submit handler to show friendly message and prevent double submits
+    const form = document.getElementById('fixerForm');
+    const msg = document.getElementById('msg');
+    form.addEventListener('submit', function(e){
+      // Let browser handle required fields; just disable button to avoid double submit
+      const btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+    });
+  </script>
+</body>
+</html>

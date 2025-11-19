@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SarkariFixo Admin Dashboard</title>
+
+<style>
+  :root {
+    --blue: #003399;
+    --light: #f4f6fb;
+    --gray: #666;
+  }
+
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: var(--light);
+  }
+
+  header {
+    background: var(--blue);
+    padding: 18px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  header h2 {
+    margin: 0;
+    letter-spacing: 4px;
+  }
+
+  .container {
+    max-width: 1150px;
+    margin: 20px auto;
+    padding: 0 15px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+  }
+
+  select,
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 10px 12px;
+    border: none;
+    border-radius: 6px;
+    background: var(--blue);
+    color: white;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #002266;
+  }
+
+  #logoutBtn {
+    background: #c0392b;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th, td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  th {
+    background: #f0f3f8;
+    text-align: left;
+  }
+
+  tr:hover {
+    background: #fafcff;
+  }
+
+  .status-pending {
+    background: #fff4d6;
+    color: #d09800;
+    padding: 5px 8px;
+    border-radius: 6px;
+  }
+
+  .status-done {
+    background: #d7ffe2;
+    color: #0a8f4a;
+    padding: 5px 8px;
+    border-radius: 6px;
+  }
+</style>
+
+</head>
+<body>
+
+<header>
+  <h2>SARKARIFIXO</h2>
+  <button id="logoutBtn">Logout</button>
+</header>
+
+<div class="container">
+
+  <div class="controls">
+    <select id="serviceFilter">
+      <option value="">All Services</option>
+    </select>
+
+    <input type="text" id="searchBox" placeholder="Search name, email, phone">
+
+    <button id="searchBtn">Search</button>
+
+    <button id="downloadBtn">Download CSV</button>
+  </div>
+
+  <h3 id="loading">Loading...</h3>
+
+  <table id="dataTable" style="display:none;">
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>ID</th>
+        <th>Issue</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+
+</div>
+
+
+<script>
+  // Access protection
+  if (sessionStorage.getItem("sarkari_admin") !== "yes") {
+    window.location.href = "/admin.html";
+  }
+
+  const serviceFilter = document.getElementById("serviceFilter");
+  const searchBox = document.getElementById("searchBox");
+  const searchBtn = document.getElementById("searchBtn");
+  const downloadBtn = document.getElementById("downloadBtn");
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  const dataTable = document.getElementById("dataTable");
+  const tableBody = document.getElementById("tableBody");
+  const loading = document.getElementById("loading");
+
+  let allData = [];
+
+  async function loadData() {
+    loading.style.display = "block";
+    dataTable.style.display = "none";
+
+    const res = await fetch("/api/submissions");
+    allData = await res.json();
+
+    populateServices();
+    renderTable(allData);
+
+    loading.style.display = "none";
+    dataTable.style.display = "table";
+  }
+
+  function populateServices() {
+    const services = [...new Set(allData.map(x => x.Service))];
+
+    services.forEach(s => {
+      const opt = document.createElement("option");
+      opt.value = s;
+      opt.textContent = s;
+      serviceFilter.appendChild(opt);
+    });
+  }
+
+  function renderTable(list) {
+    tableBody.innerHTML = "";
+
+    list.forEach((row, index) => {
+      const tr = document.createElement("tr");
+
+      tr.innerHTML = `
+        <td>${row.Service}</td>
+        <td>${row.FullName}</td>
+        <td>${row.Email}</td>
+        <td>${row.Phone}</td>
+        <td>${row.ID}</td>
+        <td>${row.Issue}</td>
+        <td>${row.Date}</td>
+        <td>
+          ${row.Status == "1"
+            ? '<span class="status-done">Completed</span>'
+            : '<span class="status-pending">Pending</span>'
+          }
+        </td>
+        <td>
+          <button onclick="toggleStatus(${index})">
+            ${row.Status == "1" ? "Mark Pending" : "Mark Done"}
+          </button>
+        </td>
+      `;
+
+      tableBody.appendChild(tr);
+    });
+  }
+
+  searchBtn.onclick = () => {
+    const q = searchBox.value.toLowerCase();
+    const svc = serviceFilter.value;
+
+    let filtered = allData;
+
+    if (svc) {
+      filtered = filtered.filter(x => x.Service === svc);
+    }
+
+    if (q) {
+      filtered = filtered.filter(x =>
+        x.FullName.toLowerCase().includes(q) ||
+        x.Email.toLowerCase().includes(q) ||
+        x.Phone.toLowerCase().includes(q)
+      );
+    }
+
+    renderTable(filtered);
+  };
+
+  downloadBtn.onclick = () => {
+    window.location.href = "/api/download";
+  };
+
+  logoutBtn.onclick = () => {
+    sessionStorage.removeItem("sarkari_admin");
+    window.location.href = "/admin.html";
+  };
+
+  async function toggleStatus(index) {
+    const newStatus = allData[index].Status === "1" ? 0 : 1;
+
+    await fetch("/api/update-status", {
+      method: "POST",
+      headers: { "Content-Type":"application/json" },
+      body: JSON.stringify({
+        rowIndex: index,
+        set: newStatus
+      })
+    });
+
+    allData[index].Status = String(newStatus);
+    renderTable(allData);
+  }
+
+  loadData();
+</script>
+
+</body>
+</html>
